@@ -4,6 +4,8 @@ const main = document.getElementById('main')
 const form = document.getElementById('form')
 const search = document.getElementById('search')
 
+// get users 
+
 async function getUser(username){
     try{
         const response = await fetch(APIURL + username);
@@ -16,8 +18,10 @@ throw new Error('No Profile with this username');
     }
     catch(err){
         createErrorCard(err.message);
+        showToast(err.message)
     }
 }
+//  get repos 
 
 async function getRepos(username){
     try{
@@ -29,9 +33,11 @@ async function getRepos(username){
         addReposToCard(data);
     }catch(err){
         createErrorCard('problem fetching repos')
+        showToast('Problem Fetching Repositories')
     }
 }
 
+// create user card 
 
 function createUserCard(user){
 
@@ -57,22 +63,26 @@ function createUserCard(user){
   </div>
     `
     main.innerHTML   = cardHtml;
+
 }
 
+// create error 
 function createErrorCard(err){
     const cardHTML = `
     <div class="card">
-        <h1>${msg}</h1>
+        <h1>${err}</h1>
     </div>
 `
-
 main.innerHTML = cardHTML
 }
+
+// add repo
+
 function addReposToCard(repos){
     const reposEl = document.getElementById('repos')
 
     repos
-    .slice(0,5)
+    .slice(0,6)
     .forEach(repo =>{
         const repoEl = document.createElement('a');
         repoEl.classList.add('repo')
@@ -85,6 +95,8 @@ function addReposToCard(repos){
 
 }
 
+
+// event listenter 
 form.addEventListener('submit',(e) =>{
     e.preventDefault();
     const user = search.value;
@@ -93,5 +105,4 @@ form.addEventListener('submit',(e) =>{
         getUser(user)
         search.value = ''
     }
-
 })
